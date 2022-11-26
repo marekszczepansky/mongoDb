@@ -254,6 +254,7 @@ db.coll.update( {_id:235399}, {$unset: {"casts.crew.$[].withBase":""}} )
 ```
 
 [Remove field found in any mongodb array](https://stackoverflow.com/a/55451053)
+
 Case 1 - Remove the inner array elements where the Field is present
 ```js
 db.collection.updateMany(
@@ -489,4 +490,80 @@ db.collection.aggregate([
   { $replaceWith: "$subdoc" }
 ])
 // { b: 2, c: 3, a: 1 }
+```
+[Find in Double Nested Array MongoDB](https://stackoverflow.com/a/29072062)
+
+By ket field
+```js
+db.mycollection.find({
+    "someArray.someNestedArray.name": "value"
+})
+```
+By many fields
+```js
+db.mycollection.find({
+    "someArray": { 
+        "$elemMatch": {
+            "name": "name1",
+            "someNestedArray": {
+                "$elemMatch": {
+                    "name": "value",
+                    "otherField": 1
+                }
+            }
+        }
+    }
+})
+```
+By crazy :)
+```js
+db.mycollection.aggregate([
+  { "$match": {
+    "someArray": {
+      "$elemMatch": {
+         "name": "name1",
+         "someNestedArray": {
+           "$elemMatch": {
+             "name": "value",
+             "otherField": 1
+           }
+         }
+       }
+    }
+  }},
+  { "$addFields": {
+    "someArray": {
+      "$filter": {
+        "input": {
+          "$map": {
+            "input": "$someArray",
+            "as": "sa",
+            "in": {
+              "name": "$$sa.name",
+              "someNestedArray": {
+                "$filter": {
+                  "input": "$$sa.someNestedArray",
+                  "as": "sn",
+                  "cond": {
+                    "$and": [
+                      { "$eq": [ "$$sn.name", "value" ] },
+                      { "$eq": [ "$$sn.otherField", 1 ] }
+                    ]
+                  }
+                }
+              }             
+            }
+          },
+        },
+        "as": "sa",
+        "cond": {
+          "$and": [
+            { "$eq": [ "$$sa.name", "name1" ] },
+            { "$gt": [ { "$size": "$$sa.someNestedArray" }, 0 ] }
+          ]
+        }
+      }
+    }
+  }}
+])
 ```
