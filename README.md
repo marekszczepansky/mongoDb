@@ -178,7 +178,7 @@ db.component.aggregate([
 ]
 ```
 
-{Document to array of values](https://stackoverflow.com/a/71808874)
+[Document to array of values](https://stackoverflow.com/a/71808874)
 ```js
 db.collection.aggregate([
   {
@@ -493,7 +493,7 @@ db.collection.aggregate([
 ```
 [Find in Double Nested Array MongoDB](https://stackoverflow.com/a/29072062)
 
-By ket field
+By one field
 ```js
 db.mycollection.find({
     "someArray.someNestedArray.name": "value"
