@@ -118,7 +118,7 @@ db.component.aggregate([
 ]).pretty();
 ````
 [How to use $map over an object of objects in an aggregation? - Record<string, object>](https://stackoverflow.com/a/62283596)
-```json
+```js
 {
     $replaceRoot: {
         newRoot: {
@@ -295,7 +295,7 @@ db.collection.updateMany(
   { "$set": { "scan": []  } }
 )
 ```
-You could still use an arrayFilters and a positional filtered $[<identifier>], but here it would be overkill.
+You could still use an arrayFilters and a positional filtered $\[<identifier>], but here it would be overkill.
 ```js
 db.collection.updateMany(
   { "scan": {
@@ -325,7 +325,7 @@ db.collection.update(
 ```
 
 [Map array primitiv elements to objects](https://stackoverflow.com/a/56766672)
-``js
+```js
 // {
 //   title: "record 1",
 //   fields: [
